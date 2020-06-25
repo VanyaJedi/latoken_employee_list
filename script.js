@@ -11,6 +11,14 @@
 
  const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
 
+ const SHEETS_MAP = {
+   operations: '1Cr2XVZX2P2iphLBXXoe8xuIXgPpBlNqscv1EPPt3cCg',
+   growth: '1eFawgKjDtgKbvCGlC199k_KCaBVWjQpzS-eUvz7E5JU',
+   finance: '1lJ5tX7EOfWFyMRwpKpLjdQfllBFYLVkHcDgLiC8IQ8Q',
+   customer: '15PBd1qUWpT_F7TLJ8p3AxRtqpGAz43KKP35CUxNRzbI',
+   analytics: '1-uwmPbgD33S_l0iuI3vdmpArTyGAHa4SgkB7e3XUm4Y'
+ }
+
  const authorizeButton = document.getElementById('authorize_button');
  const signoutButton = document.getElementById('signout_button');
  const updateBtn = document.getElementById('update_data');
@@ -19,22 +27,41 @@
  const mainElement = document.querySelector('.page-main');
  const headerElement = document.querySelector('.page-header');
  const info = document.querySelector('.page-main__info-panel');
+ const selectUnitBtns = document.querySelectorAll('.select-unit__item');
+
+ let selectedRow = null;
+ let currentUnit = null;
+
+ const selectUnitClick = function(evt) {
+  mainElement.classList.remove('page-main--notselected');
+  const unit = evt.target.dataset.unit;
+  if (currentUnit === unit) {
+    return;
+  }
+  listMajors(SHEETS_MAP[unit]);
+  currentUnit = unit;
+ }
+
+ Array.from(selectUnitBtns).forEach((btn) => {
+   btn.addEventListener('click', selectUnitClick);
+ })
+
 
  const showInfo = function(message) {
-  info.innerText = message;
+    info.innerText = message;
  }
- let selectedRow = null;
+
 
  const table = new Tabulator("#tbl", {
-   height:"500px",
-   layout:"fitColumns",
-   columns:[
-    {title:"Employee", field:"employee", width:200, editor:"input", verAlign:"center"},
-    {title:"Department", field:"department", editor:"input", hozAlign:"center"},
-    {title:"Task", field:"task", editor:"input", formatter:"textarea", verAlign:"center"} ],
-   rowClick:function(e, row){
-     selectedRow = row;
-  },
+    height:"500px",
+    layout:"fitColumns",
+    columns:[
+      {title:"Role", field:"role", width:200, editor:"input", verAlign:"center"},
+      {title:"Function_short", field:"function_short", editor:"input", hozAlign:"center"},
+      {title:"Function_long", field:"function_long", editor:"input", formatter:"textarea", verAlign:"center"} ],
+    rowClick:function(e, row) {
+      selectedRow = row;
+    },
  });
 
 const dataAdapter = function(data) {
@@ -106,7 +133,7 @@ const dataToRaw = function(data) {
      headerElement.classList.remove('page-header--notauth');
      authorizeButton.style.display = 'none';
      signoutButton.style.display = 'block';
-     listMajors();
+     //listMajors();
    } else {
      mainElement.classList.add('page-main--notauth');
      headerElement.classList.add('page-header--notauth');
@@ -145,10 +172,12 @@ const dataToRaw = function(data) {
   * Print the names and majors of students in a sample spreadsheet:
   * https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
   */
- function listMajors() {
+ function listMajors(spreadsheet) {
    gapi.client.sheets.spreadsheets.values.get({
-     spreadsheetId: '1N6iJvyMiP-eVbpcK2o4LyiO7JUYbLD5RfLYR22kw5gI',
-     range: 'Sheet1',
+     //spreadsheetId: '1N6iJvyMiP-eVbpcK2o4LyiO7JUYbLD5RfLYR22kw5gI',
+     spreadsheetId: spreadsheet,
+     range: 'Лист1'
+     //range: 'Sheet1',
    }).then(function(response) {
      mainElement.classList.remove('page-main--loading');
      var range = response.result;
@@ -162,8 +191,10 @@ const dataToRaw = function(data) {
 
  const clearTheSpreadsheet = function() {
   const request = gapi.client.sheets.spreadsheets.values.clear({
-    spreadsheetId: '1N6iJvyMiP-eVbpcK2o4LyiO7JUYbLD5RfLYR22kw5gI',
-    range: 'Sheet1'
+    //spreadsheetId: '1N6iJvyMiP-eVbpcK2o4LyiO7JUYbLD5RfLYR22kw5gI',
+    spreadsheetId: SHEETS_MAP[currentUnit],
+    //range: 'Sheet1'
+    range: 'Лист1'
   })
   return request;
  }
@@ -175,8 +206,10 @@ const dataToRaw = function(data) {
       };
       clearTheSpreadsheet().then((response) => {
         gapi.client.sheets.spreadsheets.values.update({
-          spreadsheetId: '1N6iJvyMiP-eVbpcK2o4LyiO7JUYbLD5RfLYR22kw5gI',
-          range: 'Sheet1',
+          //spreadsheetId: '1N6iJvyMiP-eVbpcK2o4LyiO7JUYbLD5RfLYR22kw5gI',
+          spreadsheetId: SHEETS_MAP[currentUnit],
+          //range: 'Sheet1',
+          range: 'Лист1',
           valueInputOption: 'RAW',
           resource: body
        }).then((response) => {
@@ -191,7 +224,7 @@ const dataToRaw = function(data) {
  updateBtn.addEventListener('click', changeDataInSpreedSheet );
 
  const addRowToTable = function() {
-    table.addRow({employee:"", department:"", task:"" }, false)
+    table.addRow({role:"", function_short:"", function_long:"" }, false)
     .then(()=>{
       showInfo('empty row has been added');
     })

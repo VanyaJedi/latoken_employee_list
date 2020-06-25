@@ -35,18 +35,47 @@
         <img class="page-header__logo" src="./img/latoken.svg" alt="logo">
         <h1>Latoken employee task list</h1>
         <div class="auth-block">
-          <button id="authorize_button" class="auth-block-btn btn" style="display: none;">Authorize</button>
-          <button id="signout_button" class="btn" style="display: none;">Sign Out</button>      
+          <button id="authorize_button" class="auth-block-btn btn btn--fix" style="display: none;">Authorize</button>
+          <button id="signout_button" class="btn btn--fix" style="display: none;">Sign Out</button>      
         </div>
       </div>
         
     </header>
-    <main class="page-main page-main--loading page-main--notauth">
+    <main class="page-main page-main--loading page-main--notauth page-main--notselected">
+      <div class="page-main__starting-info">Select the unit!</div>
+      <ul class="page-main__select-unit select-unit">
+        <li class="select-unit__item">
+          <button type="button" class="select-item__btn btn" data-unit="operations">
+            Operations
+          </button>
+        </li>
+        <li class="select-unit__item">
+          <button type="button" class="select-item__btn btn" data-unit="growth">
+            GROWTH
+          </button>
+        </li>
+        <li class="select-unit__item">
+          <button type="button" class="select-item__btn btn" data-unit="finance">
+            Finance
+          </button>
+        </li>
+        <li class="select-unit__item">
+          <button type="button" class="select-item__btn btn" data-unit="customer">
+            Customer success
+          </button>
+        </li>
+        <li class="select-unit__item">
+          <button type="button" class="select-item__btn btn" data-unit="analytics">
+            Analytics
+          </button>
+        </li>
+      </ul>
+
       <div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
       <div class="page-main__wrapper wrapper">
         <div class="page-main__controls">
-          <button id="add_row" class="btn" type="button">Add row</button>
-          <button id="delete_row" class="btn" type="button">Delete row</button>
+          <button id="add_row" class="btn btn--fix" type="button">Add row</button>
+          <button id="delete_row" class="btn btn--fix" type="button">Delete row</button>
           <button id="update_data" class="page-main__submit-btn btn" type="button">Submit changes</button>
         </div>
 
