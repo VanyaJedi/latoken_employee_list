@@ -56,9 +56,9 @@
     height:"500px",
     layout:"fitColumns",
     columns:[
-      {title:"Role", field:"role", width:200, editor:"input", verAlign:"center"},
-      {title:"Function_short", field:"function_short", editor:"input", hozAlign:"center"},
-      {title:"Function_long", field:"function_long", editor:"input", formatter:"textarea", verAlign:"center"} ],
+      {title:"Role", field:"role", width:200, editor:"input", width:200},
+      {title:"Function_short", field:"function_short", editor:"input", hozAlign:"center", width:200},
+      {title:"Function_long", field:"function_long", editor:"input", formatter:"textarea",  width:400} ],
     rowClick:function(e, row) {
       selectedRow = row;
     },
