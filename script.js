@@ -119,7 +119,7 @@ const dataToRaw = function(data) {
      authorizeButton.onclick = handleAuthClick;
      signoutButton.onclick = handleSignoutClick;
    }, function(error) {
-     appendPre(JSON.stringify(error, null, 2));
+     console.log(error);
    });
  }
 
@@ -154,18 +154,6 @@ const dataToRaw = function(data) {
   */
  function handleSignoutClick(event) {
    gapi.auth2.getAuthInstance().signOut();
- }
-
- /**
-  * Append a pre element to the body containing the given message
-  * as its text node. Used to display the results of the API call.
-  *
-  * @param {string} message Text to be placed in pre element.
-  */
- function appendPre(message) {
-   var pre = document.getElementById('content');
-   var textContent = document.createTextNode(message + '\n');
-   pre.appendChild(textContent);
  }
 
  /**
